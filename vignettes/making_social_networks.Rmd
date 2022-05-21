@@ -1,0 +1,57 @@
+---
+title: "Making social networks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Making social networks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pondr)
+```
+
+# Network from pre-loaded data
+
+```{r}
+block_df
+```
+
+```{r}
+# make network
+network = pr_make_network(
+  block_df = block_df,
+  block_ref_df = block_ref_df,
+  time_bin = "5 seconds"
+)
+```
+
+```{r}
+# plot network, colouring by the continuous SL variable
+pr_plot_network(
+  network = network,
+  colour_by = SL
+)
+```
+
+```{r}
+# plot network, colouring by the categorical Plates variable
+pr_plot_network(
+  network = network,
+  colour_by = Plates
+)
+```
+
+```{r}
+# plot network with no node colours
+pr_plot_network(
+  network = network
+)
+```

@@ -4,13 +4,13 @@
 \alias{pr_plot_network}
 \title{Plot a social network.}
 \usage{
-pr_plot_network(network, colour_by)
+pr_plot_network(network, colour_by = NULL)
 }
 \arguments{
 \item{network}{A `tidygraph` network object.}
 
 \item{colour_by}{A variable in the node data (given in `block_ref_df`)
-by which to colour the data.}
+by which to colour the data, passed as an _unquoted_ name, such as _SL_.}
 }
 \value{
 A `ggraph` plot.
@@ -20,14 +20,20 @@ Function to plot a `tidygraph` network object made using
 `pr_make_network`.
 }
 \examples{
-
 \dontrun{
 data(block_df)
 data(block_ref_df)
 
-network = pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
+network <- pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
 
-pr_plot_network(network, Plates)
+# to colour by the categorical variable 'Plates'
+pr_plot_network(network, Plates) # no quotes around Plates!
+
+# to colour by the numeric variable 'SL'
+pr_plot_network(network, SL)
+
+# no colours, the default
+pr_plot_network(network, NULL)
 }
 
 }
