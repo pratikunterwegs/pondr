@@ -4,13 +4,16 @@
 \alias{pr_plot_network}
 \title{Plot a social network.}
 \usage{
-pr_plot_network(network, colour_by = NULL)
+pr_plot_network(network, colour_by = NULL, wt_lim = 100)
 }
 \arguments{
 \item{network}{A `tidygraph` network object.}
 
 \item{colour_by}{A variable in the node data (given in `block_ref_df`)
 by which to colour the data, passed as an _unquoted_ name, such as _SL_.}
+
+\item{wt_lim}{A numeric value of the upper limit of the weight. Can be used
+to scale edges to a common line thickness, to compare across figures.}
 }
 \value{
 A `ggraph` plot.
