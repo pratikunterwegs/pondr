@@ -27,13 +27,15 @@
 #' data(block_ref_df)
 #'
 #'
-#' pr_sociality(block_df,
-#'             block_ref_df)
+#' pr_sociality(
+#'   block_df,
+#'   block_ref_df
+#' )
 #'
 #' pr_sociality(block_df,
-#'             block_ref_df,
-#'             cutoff = 0)
-#'
+#'   block_ref_df,
+#'   cutoff = 0
+#' )
 #'
 pr_sociality <- function(block_df,
                          block_ref_df,
@@ -49,8 +51,6 @@ pr_sociality <- function(block_df,
     dplyr::add_tally(name = "acc_reads") %>%
     # Remove time and antenna columns, useless here
     dplyr::select(-c(time, antenna)) %>%
-
-
     # I go back to my iniaial table (one row per read),
     # but with each individual assigned to a nb of accompanied reads
     dplyr::right_join(block_df["id"]) %>%
@@ -66,6 +66,5 @@ pr_sociality <- function(block_df,
   # Only keep sociality score (proportion column) if tot_reads > cutoff
   block_df[, "proportion"][block_df[, "tot_reads"] < cutoff] <- NA
 
-return(block_df)
+  return(block_df)
 }
-

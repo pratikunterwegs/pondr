@@ -32,12 +32,14 @@ data(block_df)
 data(block_ref_df)
 
 
-pr_sociality(block_df,
-            block_ref_df)
+pr_sociality(
+  block_df,
+  block_ref_df
+)
 
 pr_sociality(block_df,
-            block_ref_df,
-            cutoff = 0)
-
+  block_ref_df,
+  cutoff = 0
+)
 
 }

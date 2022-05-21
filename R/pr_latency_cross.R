@@ -30,43 +30,44 @@
 #' @export
 #'
 #' @examples
-#'sequence_1 <- as.data.frame(rbind(
-#'  c(41, 42),
-#'  c(41, 43),
-#'  c(41, 44),
-#'  c(42, 41),
-#'  c(42, 43),
-#'  c(42, 44),
-#'  c(43, 41),
-#'  c(43, 42),
-#'  c(43, 44),
-#'  c(44, 41),
-#'  c(44, 42),
-#'  c(42, 43)
-#'))
+#' sequence_1 <- as.data.frame(rbind(
+#'   c(41, 42),
+#'   c(41, 43),
+#'   c(41, 44),
+#'   c(42, 41),
+#'   c(42, 43),
+#'   c(42, 44),
+#'   c(43, 41),
+#'   c(43, 42),
+#'   c(43, 44),
+#'   c(44, 41),
+#'   c(44, 42),
+#'   c(42, 43)
+#' ))
 #'
 #'
-#'sequence_2 <- c(43, 42)
+#' sequence_2 <- c(43, 42)
 #'
 #'
-#'start_time <-
-#'  as.POSIXct(strptime(c("2020-11-05 12:30:00"), "%Y-%m-%d %H:%M:%OS"), "UTC")
-#'end_time <-
-#'  as.POSIXct(strptime(c("2020-11-05 15:00:00"), "%Y-%m-%d %H:%M:%OS"), "UTC")
+#' start_time <-
+#'   as.POSIXct(strptime(c("2020-11-05 12:30:00"), "%Y-%m-%d %H:%M:%OS"), "UTC")
+#' end_time <-
+#'   as.POSIXct(strptime(c("2020-11-05 15:00:00"), "%Y-%m-%d %H:%M:%OS"), "UTC")
 #'
 #' pr_latency_cross(block_df, block_ref_df, sequence_1, start_time, end_time)
 #' pr_latency_cross(block_df, block_ref_df, sequence_2,
-#' start_time, end_time, keep_NA = TRUE, unit = 's')
-#'
+#'   start_time, end_time,
+#'   keep_NA = TRUE, unit = "s"
+#' )
 #'
 pr_latency_cross <- function(block_df,
-                         block_ref_df,
-                         sequence,
-                         start_time,
-                         end_time,
-                         seq_position = 2,
-                         unit = 'm',
-                         keep_NA = FALSE) {
+                             block_ref_df,
+                             sequence,
+                             start_time,
+                             end_time,
+                             seq_position = 2,
+                             unit = "m",
+                             keep_NA = FALSE) {
   # Function to obtain the latency of each individual to cross one sequence
   lat_cross <- function(block_df, sequence) {
     # Define objects
@@ -79,23 +80,23 @@ pr_latency_cross <- function(block_df,
 
     for (i in 1:length(block_df_id)) {
       # First reorder by time
-      block_df_id[[i]][order(as.POSIXct(block_df_id[[i]]$time, "UTC")),]
+      block_df_id[[i]][order(as.POSIXct(block_df_id[[i]]$time, "UTC")), ]
 
       # I obtain the row nb of the antenna changes
-      changes          <-
+      changes <-
         which(block_df_id[[i]]$antenna != dplyr::lag(block_df_id[[i]]$antenna))
 
       # Corresponding antenna numbers
-      antenna          <-
+      antenna <-
         c(block_df_id[[i]]$antenna[1], block_df_id[[i]]$antenna[changes])
 
       # Corresponding time
-      time             <-
+      time <-
         c(block_df_id[[i]]$time[1], block_df_id[[i]]$time[changes])
       attr(time, "tzone") <- "UTC"
 
       # Name of individual
-      id               <-
+      id <-
         c(block_df_id[[i]]$id[1], block_df_id[[i]]$id[changes])
 
       # Obtain a data frame with each antenna change per individual
@@ -107,7 +108,7 @@ pr_latency_cross <- function(block_df,
         sequence.rev <- rev(sequence)
 
         # Embed time series (?)
-        w <- embed(block_df_id[[i]]$antenna, length(sequence))
+        w <- stats::embed(block_df_id[[i]]$antenna, length(sequence))
 
         # I subset one row from the crossing sequence of interest
         # By default, the read at the second antenna of the sequence is selected (seq_position = 2)
@@ -116,11 +117,13 @@ pr_latency_cross <- function(block_df,
 
 
         # I make a data frame containing the name of the individual, and its latency to cross the sequence of interest
-        list_df[[i]] <- data.frame(id = list_df[[i]]$id[1],
-                                   lat = as.numeric(difftime(
-                                     list_df[[i]]$time[1], start_time, unit = unit
-                                   )))
-
+        list_df[[i]] <- data.frame(
+          id = list_df[[i]]$id[1],
+          lat = as.numeric(difftime(
+            list_df[[i]]$time[1], start_time,
+            unit = unit
+          ))
+        )
       } # end of if
     } # end of for loop
 
@@ -129,7 +132,7 @@ pr_latency_cross <- function(block_df,
     list_df <- dplyr::bind_rows(list_df)
 
     # Remove rows with NAs
-    list_df <- na.omit(list_df)
+    list_df <- stats::na.omit(list_df)
 
     # Reset row names
     rownames(list_df) <- NULL
@@ -139,7 +142,6 @@ pr_latency_cross <- function(block_df,
       paste0("lat_", paste0(sequence, collapse = "_"))
 
     return(list_df)
-
   } # end of lat_cross function
 
   # Define objects
@@ -148,7 +150,6 @@ pr_latency_cross <- function(block_df,
   # If the input vector is a vector, convert it to a one row data frame
   if (is.vector(sequence) == TRUE) {
     sequence <- as.data.frame(rbind(sequence))
-
   }
 
   # For every sequence of interest
@@ -158,12 +159,13 @@ pr_latency_cross <- function(block_df,
   }
 
   # I merge all data frames contained in latency_per_seq
-  output <- Reduce(function(x, y)
-    merge(x, y, all = TRUE), latency_per_seq)
+  output <- Reduce(function(x, y) {
+    merge(x, y, all = TRUE)
+  }, latency_per_seq)
 
   # If keep_NA is FALSE, I give the maximal value for the latency scores
   if (keep_NA == FALSE) {
-    output[is.na(output)] <- difftime(end_time, start_time, unit = 'm')
+    output[is.na(output)] <- difftime(end_time, start_time, unit = "m")
   }
 
 

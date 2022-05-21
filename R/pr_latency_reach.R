@@ -40,32 +40,31 @@
 #'
 #'
 #'
-#' #pr_latency_reach(
-#' #block_df,
-#' #block_ref_df,
-#' #antenna_nb_2,
-#' #start_time,
-#' #end_time,
-#' #keep_NA = T,
-#' #unit = 's')
+#' # pr_latency_reach(
+#' # block_df,
+#' # block_ref_df,
+#' # antenna_nb_2,
+#' # start_time,
+#' # end_time,
+#' # keep_NA = T,
+#' # unit = 's')
 #'
-#' #pr_latency_reach(
-#' #block_df,
-#' #block_ref_df,
-#' #antenna_nb_1,
-#' #start_time,
-#' #end_time,
-#' #keep_NA = T,
-#' #unit = 'm')
+#' # pr_latency_reach(
+#' # block_df,
+#' # block_ref_df,
+#' # antenna_nb_1,
+#' # start_time,
+#' # end_time,
+#' # keep_NA = T,
+#' # unit = 'm')
 pr_latency_reach <-
-
   function(block_df,
            block_ref_df,
            antenna_nb,
            start_time,
            end_time,
            keep_NA = FALSE,
-           unit = 'm') {
+           unit = "m") {
     # If there is only one antenna of interest
     if (length(antenna_nb) == 1) {
       # Subset reads at this antenna
@@ -97,7 +96,7 @@ pr_latency_reach <-
         # Remove the time column
         dplyr::select(-time) %>%
         # Spread the table horizontally (one column per antenna)
-        tidyr::pivot_wider(names_from = antenna , values_from = latency)
+        tidyr::pivot_wider(names_from = antenna, values_from = latency)
     }
 
     # If keep_NA is FALSE, or if nothing is indicated
@@ -115,9 +114,3 @@ pr_latency_reach <-
     }
     return(block_df)
   }
-
-
-
-
-
-
