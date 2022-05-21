@@ -6,7 +6,7 @@
 #' @param network A `tidygraph` network object.
 #'
 #' @param colour_by A variable in the node data (given in `block_ref_df`)
-#' by which to colour the data.
+#' by which to colour the data, passed as a string.
 #'
 #' @return A `ggraph` plot.
 #'
@@ -19,11 +19,22 @@
 #'
 #' network <- pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
 #'
-#' pr_plot_network(network, Plates)
+#' # to colour by the categorical variable 'Plates'
+#' pr_plot_network(network, "Plates")
+#'
+#' # to colour by the numeric variable 'SL'
+#' pr_plot_network(network, "SL")
+#'
+#' # no colours, the default
+#' pr_plot_network(network, NULL)
 #' }
 #'
-pr_plot_network <- function(network, colour_by) {
-  colour_by <- rlang::enquo(colour_by)
+pr_plot_network <- function(network, colour_by = NULL) {
+  check_numeric <- F
+  if (!is.null(colour_by)) {
+    check_numeric <- T
+    colour_by <- rlang::sym(colour_by)
+  }
 
   p <- ggraph::ggraph(
     network,
@@ -51,10 +62,13 @@ pr_plot_network <- function(network, colour_by) {
 
   # pull the column by which to colour the data to identify
   # whether it's a factor
-  colour_factor <- dplyr::pull(
-    dplyr::as_tibble(network),
-    !!colour_by
-  )
+  colour_factor <- NULL
+  if (check_numeric) {
+    colour_factor <- dplyr::pull(
+      dplyr::as_tibble(network),
+      !!colour_by
+    )
+  }
 
   # specify correct fill function based on whether the
   # colouring factor is continuous or discrete
