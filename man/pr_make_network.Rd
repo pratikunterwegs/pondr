@@ -29,6 +29,6 @@ detected within a `time_bin` at one of multiple readers.
 data(block_df)
 data(block_ref_df)
 
-network = pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
+network <- pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
 
 }
