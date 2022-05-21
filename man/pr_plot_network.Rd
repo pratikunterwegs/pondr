@@ -10,7 +10,7 @@ pr_plot_network(network, colour_by = NULL)
 \item{network}{A `tidygraph` network object.}
 
 \item{colour_by}{A variable in the node data (given in `block_ref_df`)
-by which to colour the data, passed as a string.}
+by which to colour the data, passed as an _unquoted_ name, such as _SL_.}
 }
 \value{
 A `ggraph` plot.
@@ -27,10 +27,10 @@ data(block_ref_df)
 network <- pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
 
 # to colour by the categorical variable 'Plates'
-pr_plot_network(network, "Plates")
+pr_plot_network(network, Plates) # no quotes around Plates!
 
 # to colour by the numeric variable 'SL'
-pr_plot_network(network, "SL")
+pr_plot_network(network, SL)
 
 # no colours, the default
 pr_plot_network(network, NULL)

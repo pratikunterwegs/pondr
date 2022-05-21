@@ -37,7 +37,7 @@ network = pr_make_network(
 # plot network, colouring by the continuous SL variable
 pr_plot_network(
   network = network,
-  colour_by = "SL"
+  colour_by = SL
 )
 ```
 
@@ -45,7 +45,7 @@ pr_plot_network(
 # plot network, colouring by the categorical Plates variable
 pr_plot_network(
   network = network,
-  colour_by = "Plates"
+  colour_by = Plates
 )
 ```
 

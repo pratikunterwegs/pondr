@@ -6,7 +6,7 @@
 #' @param network A `tidygraph` network object.
 #'
 #' @param colour_by A variable in the node data (given in `block_ref_df`)
-#' by which to colour the data, passed as a string.
+#' by which to colour the data, passed as an _unquoted_ name, such as _SL_.
 #'
 #' @return A `ggraph` plot.
 #'
@@ -20,21 +20,17 @@
 #' network <- pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
 #'
 #' # to colour by the categorical variable 'Plates'
-#' pr_plot_network(network, "Plates")
+#' pr_plot_network(network, Plates) # no quotes around Plates!
 #'
 #' # to colour by the numeric variable 'SL'
-#' pr_plot_network(network, "SL")
+#' pr_plot_network(network, SL)
 #'
 #' # no colours, the default
 #' pr_plot_network(network, NULL)
 #' }
 #'
 pr_plot_network <- function(network, colour_by = NULL) {
-  check_numeric <- F
-  if (!is.null(colour_by)) {
-    check_numeric <- T
-    colour_by <- rlang::sym(colour_by)
-  }
+  colour_by = rlang::enquo(colour_by)
 
   p <- ggraph::ggraph(
     network,
@@ -61,29 +57,26 @@ pr_plot_network <- function(network, colour_by = NULL) {
     )
 
   # pull the column by which to colour the data to identify
-  # whether it's a factor
-  colour_factor <- NULL
-  if (check_numeric) {
-    colour_factor <- dplyr::pull(
-      dplyr::as_tibble(network),
-      !!colour_by
-    )
-  }
+  # whether it's a numeric
+  # first check whether the colour variable is NULL
+  if (!rlang::quo_is_null(colour_by)) {
 
-  # specify correct fill function based on whether the
-  # colouring factor is continuous or discrete
-  if (is.numeric(colour_factor)) {
-    p <- p +
-      ggplot2::scale_fill_viridis_c(
-        direction = -1,
-        na.value = "grey99"
-      )
-  } else {
-    p <- p +
-      ggplot2::scale_fill_viridis_d(
-        option = "H",
-        begin = 0.1, end = 0.9
-      )
+    # get colour variable as name
+    colname = rlang::as_name(colour_by)
+    # check whether it is a numeric column, if so, use a continuous scale
+    if(is.numeric(dplyr::as_tibble(network)[[colname]])) {
+      p <- p +
+        ggplot2::scale_fill_viridis_c(
+          direction = -1,
+          na.value = "grey99"
+        )
+    } else {
+      p <- p +
+        ggplot2::scale_fill_viridis_d(
+          option = "H",
+          begin = 0.1, end = 0.9
+        )
+    }
   }
   p
 }
