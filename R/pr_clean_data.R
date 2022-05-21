@@ -62,7 +62,7 @@ pr_clean_data <- function(raw_df, block_ref_df) {
 }
 
 
-#raw_df <- readr::read_delim("Dummy data/raw_df.CSV", ";", escape_double = FALSE, trim_ws = TRUE)
-#block_ref_df <- readxl::read_excel("Dummy data/block_ref_df.xlsx", sheet = "Sheet1")
+# raw_df <- readr::read_delim("Dummy data/raw_df.CSV", ";", escape_double = FALSE, trim_ws = TRUE)
+# block_ref_df <- readxl::read_excel("Dummy data/block_ref_df.xlsx", sheet = "Sheet1")
 
-#pr_clean_data(raw_df, block_ref_df)
+# pr_clean_data(raw_df, block_ref_df)
