@@ -4,10 +4,10 @@
 #' `pr_make_network`.
 #'
 #' @param network A `tidygraph` network object.
-#'
 #' @param colour_by A variable in the node data (given in `block_ref_df`)
 #' by which to colour the data, passed as an _unquoted_ name, such as _SL_.
-#'
+#' @param wt_lim A numeric value of the upper limit of the weight. Can be used
+#' to scale edges to a common line thickness, to compare across figures.
 #' @return A `ggraph` plot.
 #'
 #' @export
@@ -29,7 +29,7 @@
 #' pr_plot_network(network, NULL)
 #' }
 #'
-pr_plot_network <- function(network, colour_by = NULL) {
+pr_plot_network <- function(network, colour_by = NULL, wt_lim = 100) {
   colour_by = rlang::enquo(colour_by)
 
   p <- ggraph::ggraph(
@@ -37,11 +37,11 @@ pr_plot_network <- function(network, colour_by = NULL) {
     layout = "kk" # kamada kawaii layout by default
   ) +
     ggraph::geom_edge_fan(
-      edge_colour = "grey50",
+      edge_colour = "grey70",
       ggplot2::aes(
         edge_width = weight
       ),
-      edge_alpha = 0.3,
+      edge_alpha = 0.5,
       show.legend = FALSE
     ) +
     ggraph::geom_node_point(
@@ -51,6 +51,11 @@ pr_plot_network <- function(network, colour_by = NULL) {
       size = 5,
       shape = 21
     ) +
+    ggraph::scale_edge_width(
+      range = c(0.1, 5),
+      limits = c(1, wt_lim),
+      oob = scales::squish
+    )+
     ggraph::theme_graph(
       background = "white",
       base_family = "Arial"
