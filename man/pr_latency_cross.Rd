@@ -48,18 +48,18 @@ Computes the latency to cross specific sequences of antennas consecutively
 }
 \examples{
 sequence_1 <- as.data.frame(rbind(
- c(41, 42),
- c(41, 43),
- c(41, 44),
- c(42, 41),
- c(42, 43),
- c(42, 44),
- c(43, 41),
- c(43, 42),
- c(43, 44),
- c(44, 41),
- c(44, 42),
- c(42, 43)
+  c(41, 42),
+  c(41, 43),
+  c(41, 44),
+  c(42, 41),
+  c(42, 43),
+  c(42, 44),
+  c(43, 41),
+  c(43, 42),
+  c(43, 44),
+  c(44, 41),
+  c(44, 42),
+  c(42, 43)
 ))
 
 
@@ -67,13 +67,14 @@ sequence_2 <- c(43, 42)
 
 
 start_time <-
- as.POSIXct(strptime(c("2020-11-05 12:30:00"), "\%Y-\%m-\%d \%H:\%M:\%OS"), "UTC")
+  as.POSIXct(strptime(c("2020-11-05 12:30:00"), "\%Y-\%m-\%d \%H:\%M:\%OS"), "UTC")
 end_time <-
- as.POSIXct(strptime(c("2020-11-05 15:00:00"), "\%Y-\%m-\%d \%H:\%M:\%OS"), "UTC")
+  as.POSIXct(strptime(c("2020-11-05 15:00:00"), "\%Y-\%m-\%d \%H:\%M:\%OS"), "UTC")
 
 pr_latency_cross(block_df, block_ref_df, sequence_1, start_time, end_time)
 pr_latency_cross(block_df, block_ref_df, sequence_2,
-start_time, end_time, keep_NA = TRUE, unit = 's')
-
+  start_time, end_time,
+  keep_NA = TRUE, unit = "s"
+)
 
 }
