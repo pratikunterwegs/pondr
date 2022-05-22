@@ -55,3 +55,14 @@ pr_plot_network(
   network = network
 )
 ```
+
+```{r}
+# plot network, specifying a layout
+layout = igraph::layout.fruchterman.reingold(network)
+
+pr_plot_network(
+  network = network,
+  colour_by = SL,
+  layout = layout
+)
+```

@@ -26,5 +26,6 @@ Imports:
     tidygraph,
     ggraph,
     rlang,
-    scales
+    scales,
+    igraph
 VignetteBuilder: knitr
