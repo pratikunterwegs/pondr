@@ -4,7 +4,7 @@
 \alias{pr_plot_network}
 \title{Plot a social network.}
 \usage{
-pr_plot_network(network, colour_by = NULL, wt_lim = 100)
+pr_plot_network(network, colour_by = NULL, wt_lim = 100, ...)
 }
 \arguments{
 \item{network}{A `tidygraph` network object.}
@@ -14,6 +14,9 @@ by which to colour the data, passed as an _unquoted_ name, such as _SL_.}
 
 \item{wt_lim}{A numeric value of the upper limit of the weight. Can be used
 to scale edges to a common line thickness, to compare across figures.}
+
+\item{...}{Other arguments passed to `ggraph`. Useful if passing a single
+layout for multiple graphs.}
 }
 \value{
 A `ggraph` plot.
@@ -29,8 +32,11 @@ data(block_ref_df)
 
 network <- pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
 
+# custom layout
+layout = igraph::layout.fruchterman.reingold(network)
+
 # to colour by the categorical variable 'Plates'
-pr_plot_network(network, Plates) # no quotes around Plates!
+pr_plot_network(network, Plates, layout = layout) # no quotes around Plates!
 
 # to colour by the numeric variable 'SL'
 pr_plot_network(network, SL)

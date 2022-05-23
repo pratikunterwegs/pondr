@@ -8,6 +8,8 @@
 #' by which to colour the data, passed as an _unquoted_ name, such as _SL_.
 #' @param wt_lim A numeric value of the upper limit of the weight. Can be used
 #' to scale edges to a common line thickness, to compare across figures.
+#' @param ... Other arguments passed to `ggraph`. Useful if passing a single
+#' layout for multiple graphs.
 #' @return A `ggraph` plot.
 #'
 #' @export
@@ -18,9 +20,12 @@
 #' data(block_ref_df)
 #'
 #' network <- pr_make_network(block_df, block_ref_df, time_bin = "5 seconds")
+#' 
+#' # custom layout
+#' layout = igraph::layout.fruchterman.reingold(network)
 #'
 #' # to colour by the categorical variable 'Plates'
-#' pr_plot_network(network, Plates) # no quotes around Plates!
+#' pr_plot_network(network, Plates, layout = layout) # no quotes around Plates!
 #'
 #' # to colour by the numeric variable 'SL'
 #' pr_plot_network(network, SL)
@@ -29,12 +34,18 @@
 #' pr_plot_network(network, NULL)
 #' }
 #'
-pr_plot_network <- function(network, colour_by = NULL, wt_lim = 100) {
+pr_plot_network <- function(network, colour_by = NULL, wt_lim = 100, ...) {
   colour_by = rlang::enquo(colour_by)
+
+  # check if manual layout provided
+  layout_ = igraph::layout.kamada.kawai(network)
+  if(hasArg(layout)) {
+    layout_ = layout
+  }
 
   p <- ggraph::ggraph(
     network,
-    layout = "kk" # kamada kawaii layout by default
+    layout = layout_ # kamada kawaii layout by default
   ) +
     ggraph::geom_edge_fan(
       edge_colour = "grey70",
