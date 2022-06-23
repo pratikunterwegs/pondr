@@ -8,8 +8,9 @@
 #' by which to colour the data, passed as an _unquoted_ name, such as _SL_.
 #' @param wt_lim A numeric value of the upper limit of the weight. Can be used
 #' to scale edges to a common line thickness, to compare across figures.
-#' @param ... Other arguments passed to `ggraph`. Useful if passing a single
-#' layout for multiple graphs.
+#' @param layout Pass an optional layout to `ggraph`. Useful if passing a single
+#' layout for multiple graphs. This argument can be missing; the function will
+#' generate a layout internally if so.
 #' @return A `ggraph` plot.
 #'
 #' @export
@@ -34,18 +35,18 @@
 #' pr_plot_network(network, NULL)
 #' }
 #'
-pr_plot_network <- function(network, colour_by = NULL, wt_lim = 100, ...) {
+pr_plot_network <- function(network, colour_by = NULL, wt_lim = 100, layout) {
   colour_by = rlang::enquo(colour_by)
 
   # check if manual layout provided
   layout_ = igraph::layout.kamada.kawai(network)
-  if(hasArg(layout)) {
+  if(!rlang::is_missing(layout)) {
     layout_ = layout
   }
 
   p <- ggraph::ggraph(
     network,
-    layout = layout_ # kamada kawaii layout by default
+    layout = layout_
   ) +
     ggraph::geom_edge_fan(
       edge_colour = "grey70",
@@ -66,10 +67,6 @@ pr_plot_network <- function(network, colour_by = NULL, wt_lim = 100, ...) {
       range = c(0.1, 5),
       limits = c(1, wt_lim),
       oob = scales::squish
-    )+
-    ggraph::theme_graph(
-      background = "white",
-      base_family = "Arial"
     )
 
   # pull the column by which to colour the data to identify
