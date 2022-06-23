@@ -4,7 +4,7 @@
 \alias{pr_plot_network}
 \title{Plot a social network.}
 \usage{
-pr_plot_network(network, colour_by = NULL, wt_lim = 100, ...)
+pr_plot_network(network, colour_by = NULL, wt_lim = 100, layout)
 }
 \arguments{
 \item{network}{A `tidygraph` network object.}
@@ -15,8 +15,9 @@ by which to colour the data, passed as an _unquoted_ name, such as _SL_.}
 \item{wt_lim}{A numeric value of the upper limit of the weight. Can be used
 to scale edges to a common line thickness, to compare across figures.}
 
-\item{...}{Other arguments passed to `ggraph`. Useful if passing a single
-layout for multiple graphs.}
+\item{layout}{Pass an optional layout to `ggraph`. Useful if passing a single
+layout for multiple graphs. This argument can be missing; the function will
+generate a layout internally if so.}
 }
 \value{
 A `ggraph` plot.
